@@ -1,0 +1,7 @@
+main: fr.helirium.ServerUtility.Main
+version: 1.0
+name: ServerUtility
+author: Hypnos
+commands:
+  maintenance:
+    usage: /maintenance <on/off>
