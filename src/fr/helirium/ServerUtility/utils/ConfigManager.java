@@ -15,14 +15,26 @@ public class ConfigManager {
 
     public void readConfig() {
 
-        ConfigurationSection section = plugin.getConfig().getConfigurationSection("PlayerUUID");
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("PlayersUUID");
 
-        for (String item : section.getKeys(true)){
+        if (section != null) {
+            for (String item : section.getKeys(true)) {
 
-            String uuid = (String) section.get(item);
-            Main.authorized.add(UUID.fromString(uuid));
+                String uuid = (String) section.get(item);
+                Main.authorized.add(UUID.fromString(uuid));
 
+            }
         }
+
     }
 
+    public void setStatus() {
+        Boolean currentStatus = plugin.maintenanceEnable;
+        plugin.getConfig().set("MaintenanceStatus", currentStatus);
+        plugin.saveConfig();
+    }
+
+    public boolean getStatus() {
+        return plugin.getConfig().getBoolean("MaintenanceStatus");
+    }
 }

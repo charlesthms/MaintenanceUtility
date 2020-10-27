@@ -3,7 +3,6 @@ package fr.helirium.ServerUtility;
 import fr.helirium.ServerUtility.commands.CommandManager;
 import fr.helirium.ServerUtility.listeners.PlayerLogin;
 import fr.helirium.ServerUtility.utils.ConfigManager;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,16 +12,15 @@ import java.util.UUID;
 
 public class Main extends JavaPlugin {
 
-    public static boolean maintenanceEnable = false;
+    public boolean maintenanceEnable = new ConfigManager(this).getStatus();
     public static Set<UUID> authorized = new HashSet<>();
     private PluginManager pluginManager;
 
     @Override
     public void onEnable() {
-        readUUID();
-
+        setup();
         pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new PlayerLogin(), this);
+        pluginManager.registerEvents(new PlayerLogin(this), this);
 
         getCommand("maintenance").setExecutor(new CommandManager(this));
         loadConfig();
@@ -37,8 +35,10 @@ public class Main extends JavaPlugin {
         return authorized;
     }
 
-    private void readUUID() {
-        new ConfigManager(this).readConfig();
+    private void setup() {
+        ConfigManager configManager = new ConfigManager(this);
+        configManager.readConfig();
+        configManager.setStatus();
     }
 
     private void loadConfig() {

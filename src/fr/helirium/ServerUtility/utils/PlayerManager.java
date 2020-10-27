@@ -5,7 +5,7 @@ import fr.helirium.ServerUtility.constants.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class Manager {
+public class PlayerManager {
 
     public static void kickNonAuhorized() {
         for (Player player : Bukkit.getOnlinePlayers()) {

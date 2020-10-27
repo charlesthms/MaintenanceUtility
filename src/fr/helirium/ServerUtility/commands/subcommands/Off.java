@@ -3,11 +3,18 @@ package fr.helirium.ServerUtility.commands.subcommands;
 import fr.helirium.ServerUtility.Main;
 import fr.helirium.ServerUtility.commands.SubCommand;
 import fr.helirium.ServerUtility.constants.Messages;
+import fr.helirium.ServerUtility.utils.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Off extends SubCommand {
+
+    Main plugin;
+
+    public Off (Main mainInstance) {
+        this.plugin = mainInstance;
+    }
 
     @Override
     public String getName() {
@@ -29,7 +36,9 @@ public class Off extends SubCommand {
         if (player.isOp()) {
             if (args[0].equalsIgnoreCase("off")){
 
-                Main.maintenanceEnable = false;
+                plugin.maintenanceEnable = false;
+                new ConfigManager(plugin).setStatus();
+
                 player.sendMessage(Messages.MAINTENANCE_DISABLED.getMessage());
 
             } else if (args.length > 1){
@@ -41,24 +50,4 @@ public class Off extends SubCommand {
             player.sendMessage(Messages.PLAYER_NONOP.getMessage());
         }
     }
-
-    /*@Override
-    public void runCommand(Player player, String[] args) {
-
-        if (player.isOp()) {
-            if (args[0].equalsIgnoreCase("off")){
-
-                Main.maintenanceEnable = false;
-                player.sendMessage(Messages.MAINTENANCE_DISABLED.getMessage());
-
-            } else if (args.length > 1){
-
-                player.sendMessage(Messages.WRONG_ARG.name() + ChatColor.DARK_RED + "<" + getSyntax() + ">");
-
-            }
-        } else {
-            player.sendMessage(Messages.PLAYER_NONOP.getMessage());
-        }
-
-    }*/
 }

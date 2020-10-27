@@ -19,11 +19,12 @@ public class CommandManager implements CommandExecutor {
     public CommandManager(Main mainInstance) {
         this.plugin = mainInstance;
         // Ajout des commandes dans la liste
-        subCommands.add(new On());
-        subCommands.add(new Off());
+        subCommands.add(new On(plugin));
+        subCommands.add(new Off(plugin));
         subCommands.add(new Add(plugin));
-        subCommands.add(new Remove());
+        subCommands.add(new Remove(plugin));
         subCommands.add(new List());
+        subCommands.add(new Status(plugin));
     }
 
     @Override
