@@ -6,19 +6,20 @@ import fr.helirium.ServerUtility.constants.Messages;
 import fr.helirium.ServerUtility.utils.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 public class Off extends SubCommand {
 
     Main plugin;
 
-    public Off (Main mainInstance) {
+    public Off(Main mainInstance) {
         this.plugin = mainInstance;
     }
 
     @Override
     public String getName() {
-        return "Off";
+        return "off";
     }
 
     @Override
@@ -32,22 +33,33 @@ public class Off extends SubCommand {
     }
 
     @Override
-    public void runCommand(CommandSender player, String[] args) {
-        if (player.isOp()) {
-            if (args[0].equalsIgnoreCase("off")){
+    public void runCommand(CommandSender sender, String[] args) {
 
-                plugin.maintenanceEnable = false;
-                new ConfigManager(plugin).setStatus();
+        if (sender.hasPermission("maintenance.admin")) {
 
-                player.sendMessage(Messages.MAINTENANCE_DISABLED.getMessage());
+            if (plugin.maintenanceEnable) {
+                if (args[0].equalsIgnoreCase("off")) {
 
-            } else if (args.length > 1){
+                    plugin.maintenanceEnable = false;
+                    new ConfigManager(plugin).setStatus();
 
-                player.sendMessage(Messages.WRONG_ARG.name() + ChatColor.DARK_RED + "<" + getSyntax() + ">");
+                    sender.sendMessage(Messages.PREFIX.getMessage() + Messages.MAINTENANCE_DISABLED.getMessage());
 
+                } else if (args.length > 1) {
+
+                    sender.sendMessage(Messages.WRONG_ARG.name() + ChatColor.DARK_RED + "<" + getSyntax() + ">");
+
+                }
+            } else {
+                sender.sendMessage(Messages.PREFIX.getMessage() + ChatColor.AQUA + "La maintenance est déjà desactivée.");
             }
         } else {
-            player.sendMessage(Messages.PLAYER_NONOP.getMessage());
+            sender.sendMessage(Messages.PLAYER_NONOP.getMessage());
         }
+    }
+
+    @Override
+    public ArrayList<String> getSubcommandArgs(CommandSender sender, String[] args) {
+        return null;
     }
 }

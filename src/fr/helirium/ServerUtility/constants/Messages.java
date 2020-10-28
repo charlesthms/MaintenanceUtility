@@ -4,14 +4,20 @@ import org.bukkit.ChatColor;
 
 public enum Messages {
 
-    MAINTENANCE_ENABLED(ChatColor.LIGHT_PURPLE + "La maintenance est maintenant activée."),
-    MAINTENANCE_DISABLED(ChatColor.LIGHT_PURPLE + "La maintenance est maintenant desactivée."),
+    PREFIX(ChatColor.GOLD + "[" + ChatColor.DARK_AQUA + "MaintenanceUtility" + ChatColor.GOLD + "] " + ChatColor.RESET),
 
-    WRONG_ARG(ChatColor.RED +"Erreur de syntaxe - "),
+    MAINTENANCE_ENABLED(ChatColor.AQUA + "Le serveur entre en maintenance."),
+    MAINTENANCE_DISABLED(ChatColor.AQUA + "La maintenance est maintenant terminée ."),
+    MAINTENANCE_CURRENT(ChatColor.AQUA + "Une maintenance est en cours.\n Merci de réessayer dans "),
+    MAINTENANCE_LIST(ChatColor.AQUA + "----------- " + Messages.PREFIX.getMessage() + ChatColor.AQUA + " -----------"),
+    MAINTENANCE_STATUS(ChatColor.AQUA + "Etat de la maintenance: "),
+
+    WRONG_ARG(ChatColor.RED + "Erreur de syntaxe - "),
     MISSING_ARG(ChatColor.RED + "Argument manquant"),
 
-    PLAYER_KICK(ChatColor.AQUA + "Le serveur entre en maintenance."),
-    PLAYER_MAINTENANCE(ChatColor.AQUA + "Le serveur est en maintenance, rééssayer plus tard."),
+    PLAYER_KICK(ChatColor.AQUA + "Le serveur entre en maintenance pour: "),
+    PLAYER_KICK_UNDEFINED(ChatColor.AQUA + "Le serveur entre en maintenance pour une durée indéterminée."),
+    PLAYER_MAINTENANCE_UNDEFINED(ChatColor.AQUA + "Une maintenance est en cours pour une durée indéterminé, rééssayer plus tard."),
     PLAYER_NONOP(ChatColor.RED + "Vous n'avez pas la permission d'utiliser cette commande."),
     PLAYER_OFFLINE(ChatColor.RED + "Le joueur n'est pas connecté."),
 

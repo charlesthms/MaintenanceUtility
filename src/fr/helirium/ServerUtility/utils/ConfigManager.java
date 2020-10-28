@@ -28,6 +28,11 @@ public class ConfigManager {
 
     }
 
+    public void writeConfig(String playername, UUID uuid, String path) {
+        plugin.getConfig().set(path + playername, uuid.toString());
+        plugin.saveConfig();
+    }
+
     public void setStatus() {
         Boolean currentStatus = plugin.maintenanceEnable;
         plugin.getConfig().set("MaintenanceStatus", currentStatus);
@@ -37,4 +42,5 @@ public class ConfigManager {
     public boolean getStatus() {
         return plugin.getConfig().getBoolean("MaintenanceStatus");
     }
+
 }

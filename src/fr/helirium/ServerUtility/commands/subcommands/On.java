@@ -9,12 +9,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+
 
 public class On extends SubCommand {
 
     Main plugin;
 
     public static Long onTime;
+    public static Integer maintenanceTime;
+    public static Boolean format;
 
     public On(Main mainInstance) {
         this.plugin = mainInstance;
@@ -39,36 +43,47 @@ public class On extends SubCommand {
     @Override
     public void runCommand(CommandSender sender, String[] args) {
 
-        if (args.length == 2) {
-            // Temps au moment de l'éxécution de la commande + le délai
-            onTime = System.currentTimeMillis() / 1000 + hoursToSeconds(args[1]);
+        if (sender.hasPermission("maintenance.admin")) {
 
-            if (sender.isOp()) {
+            if (!plugin.maintenanceEnable) { // Si la maintenance n'est pas déjà activée
+                if (args.length == 2) {
 
-                if (args[0].equalsIgnoreCase("on")) {
+                    onTime = System.currentTimeMillis() / 1000 + hoursToSeconds(args[1]);
+                    maintenanceTime = hoursToSeconds(args[1]);
+                    format = true;
+
+                    if (args[0].equalsIgnoreCase("on")) {
+
+                        plugin.maintenanceEnable = true;
+                        new ConfigManager(plugin).setStatus();
+                        PlayerManager.kickNonAuhorized();
+
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "maintenance off");
+                        }, hoursToSeconds(args[1]) * 20L);
+
+                        sender.sendMessage(Messages.PREFIX.getMessage() + Messages.MAINTENANCE_ENABLED.getMessage());
+
+                    }
+                } else if (args.length == 1) {
+
+                    onTime = (long) -1;
+                    format = false;
 
                     plugin.maintenanceEnable = true;
                     new ConfigManager(plugin).setStatus();
                     PlayerManager.kickNonAuhorized();
 
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "maintenance off");
-                    }, hoursToSeconds(args[1]) * 20L);
-
-                    sender.sendMessage(Messages.MAINTENANCE_ENABLED.getMessage());
+                    sender.sendMessage(Messages.PREFIX.getMessage() + Messages.MAINTENANCE_ENABLED.getMessage());
+                } else {
+                    sender.sendMessage(Messages.WRONG_ARG.getMessage() + ChatColor.DARK_RED + "<" + getSyntax() + ">");
                 }
             } else {
-                sender.sendMessage(Messages.PLAYER_NONOP.getMessage());
+                sender.sendMessage(Messages.PREFIX.getMessage() + ChatColor.AQUA + "La maintenance est déjà activée.");
             }
 
-        } else if (args.length == 1) {
-            plugin.maintenanceEnable = true;
-            new ConfigManager(plugin).setStatus();
-            PlayerManager.kickNonAuhorized();
-
-            sender.sendMessage(Messages.MAINTENANCE_ENABLED.getMessage());
         } else {
-            sender.sendMessage(Messages.WRONG_ARG.getMessage() + ChatColor.DARK_RED + "<" + getSyntax() + ">");
+            sender.sendMessage(Messages.PLAYER_NONOP.getMessage());
         }
     }
 
@@ -102,5 +117,14 @@ public class On extends SubCommand {
         return (value < 10 ? "0" : "") + value;
     }
 
+    @Override
+    public ArrayList<String> getSubcommandArgs(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            ArrayList<String> subArgs = new ArrayList<>();
+            subArgs.add("00:00:00");
+            return subArgs;
+        }
+        return null;
+    }
 }
 

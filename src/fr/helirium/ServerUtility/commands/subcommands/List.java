@@ -2,10 +2,13 @@ package fr.helirium.ServerUtility.commands.subcommands;
 
 import fr.helirium.ServerUtility.Main;
 import fr.helirium.ServerUtility.commands.SubCommand;
+import fr.helirium.ServerUtility.constants.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -28,17 +31,31 @@ public class List extends SubCommand {
     }
 
     @Override
-    public void runCommand(CommandSender player, String[] args) {
-        OfflinePlayer offlinePlayer;
+    public void runCommand(CommandSender sender, String[] args) {
 
-        for (UUID uuid : Main.getAuthorized()) {
+        if (sender.hasPermission("maintenance.admin")){
+            OfflinePlayer offlinePlayer;
 
-            offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+            sender.sendMessage(Messages.MAINTENANCE_LIST.getMessage());
 
-            if (offlinePlayer != null){
-                player.sendMessage(offlinePlayer.getName());
+            for (UUID uuid : Main.getAuthorized()) {
+
+                offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+
+                if (offlinePlayer != null) {
+                    sender.sendMessage(ChatColor.GOLD + "- " + ChatColor.AQUA + offlinePlayer.getName());
+                }
+
             }
-
+            sender.sendMessage(ChatColor.AQUA + "----------------------------------------");
+        } else {
+            sender.sendMessage(Messages.PLAYER_NONOP.getMessage());
         }
+
+    }
+
+    @Override
+    public ArrayList<String> getSubcommandArgs(CommandSender sender, String[] args) {
+        return null;
     }
 }
